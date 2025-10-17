@@ -112,8 +112,3 @@ If you encounter errors like `FileNotFoundError: [Errno 2] No such file or direc
 - Ensure the API endpoint is running (`python endpoint.py`)
 - Check file size limits (default max: 1024MB)
 - Verify supported file formats: .pdf, .docx, .pptx, .txt, .md, .ppt, .doc, .xls
-
-### Knowledge Base Issues
-- Ensure all three services are running (Streamlit frontend, API endpoint, MCP service)
-- Check that vector databases are being created in `databases/vector_dbs/`
-- Verify Azure OpenAI credentials in `.env` file
