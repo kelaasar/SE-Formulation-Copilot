@@ -127,20 +127,26 @@ def get_kb_id_from_name(kb_name):
         print(f"Error getting KB ID from name: {e}")
         return None
 
-def delete_file_from_knowledge_base(kb_name, filename_to_delete):
-    """Delete a specific file from a knowledge base's vector database"""
-    print(f"[DELETE_FILE] Starting deletion of '{filename_to_delete}' from KB '{kb_name}'")
+def delete_file_from_knowledge_base(kb_name_or_id, filename_to_delete):
+    """Delete a specific file from a knowledge base's vector database
+    
+    Args:
+        kb_name_or_id: Either the KB name (e.g., 'KB 1') or KB ID (e.g., '8e612963')
+        filename_to_delete: Name of the file to delete
+    """
+    print(f"[DELETE_FILE] Starting deletion of '{filename_to_delete}' from KB '{kb_name_or_id}'")
     
     if not FAISS_AVAILABLE:
         print(f"[DELETE_FILE] ERROR: Vector database not available")
         return False, "Vector database not available"
     
-    # Convert KB name to ID
-    kb_identifier = get_kb_id_from_name(kb_name)
+    # Convert KB name to ID if needed, or use the ID directly
+    kb_identifier = get_kb_id_from_name(kb_name_or_id)
     
+    # If get_kb_id_from_name returns None, assume kb_name_or_id is already an ID
     if not kb_identifier:
-        print(f"[DELETE_FILE] ERROR: Could not find KB ID for '{kb_name}'")
-        return False, f"Knowledge base '{kb_name}' not found"
+        print(f"[DELETE_FILE] No KB found with name '{kb_name_or_id}', assuming it's already a KB ID")
+        kb_identifier = kb_name_or_id
     
     print(f"[DELETE_FILE] Loading vector database for KB identifier '{kb_identifier}'...")
     index, metadata = load_vector_db(kb_identifier)
@@ -239,13 +245,13 @@ def delete_file_from_knowledge_base(kb_name, filename_to_delete):
     
     # Save updated database
     if kb_identifier in ["Universal_Knowledge_Base"]:  # System KB - need special handling for save
-        print(f"[DELETE_FILE] Warning: Cannot save system KB '{kb_name}' - manual regeneration required")
-        return False, f"Cannot save system knowledge base '{kb_name}'"
+        print(f"[DELETE_FILE] Warning: Cannot save system KB '{kb_name_or_id}' - manual regeneration required")
+        return False, f"Cannot save system knowledge base '{kb_name_or_id}'"
     else:
         save_success = save_vector_db(kb_identifier, new_index, new_metadata)
     if save_success:
         print(f"[DELETE_FILE] ✅ Successfully deleted '{filename_to_delete}' ({len(indices_to_remove)} chunks)")
-        print(f"[DELETE_FILE] ✅ Updated KB '{kb_name}' now has {len(set(new_filenames))} files and {len(new_chunks)} chunks")
+        print(f"[DELETE_FILE] ✅ Updated KB '{kb_name_or_id}' now has {len(set(new_filenames))} files and {len(new_chunks)} chunks")
         return True, f"Successfully deleted '{filename_to_delete}' ({len(indices_to_remove)} chunks)"
     else:
         print(f"[DELETE_FILE] ❌ Failed to save updated knowledge base")

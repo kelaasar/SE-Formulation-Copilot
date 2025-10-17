@@ -271,8 +271,7 @@ def render_welcome_screen():
     <div class="welcome-content">
         <h1 class="main-header" style="margin-top: 5rem; font-size: 50px;">Welcome to Systems Engineering Copilot</h1>
         <p class="subtitle" style="margin-bottom: 1rem;">
-            Your AI assistant for space exploration, mission planning, and JPL knowledge.
-            Ask questions, explore heritage missions, or get help with proposals.
+            Your personal AI assistant for system engineering.
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -438,7 +437,7 @@ def render_chat_input():
         with col_input:
             user_input = st.text_area(
                 "Message",
-                placeholder="Ask me anything about space exploration, JPL missions, or get help with your projects...",
+                placeholder="Ask me anything...",
                 label_visibility="collapsed",
                 key=f"chat_input_field_{st.session_state.chat_input_key}"
             )
